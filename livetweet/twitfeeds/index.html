@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name = "viewport" content = "width=device-width, maximum-scale = 1, minimum-scale=1" />
+<title>HEINEKEN LIVE TWEET</title>
+ <script src="jquery1102.js"></script>
+<script src="js/modernizr.js"></script>
+<link type="text/css" href="css/animate.css" rel="stylesheet" />
+<link type="text/css" href="css/heineken.css" rel="stylesheet" />
+<link type="text/css" href="css/responsive.css" rel="stylesheet" />
+</head>
+
+<body>
+<div id="bubblefeeds"></div>
+<div id="logo"><img src="images/logo.png" /></div>
+
+<script>
+var jsondata = '';
+	function randOrd() {
+		return (Math.round(Math.random())-0.5); 
+	}
+	$(document).ready(function(){
+		  
+			 loadfirstdata();
+				  
+	});
+	function loadfirstdata(){
+				$.post('frontend.php',function(data){
+							 if(data){
+									var html = viewer(data)
+									$('#bubblefeeds').html(html);
+									
+								}
+								setTimeout(loaddata());
+							},"JSON");
+	}
+	
+	function loaddata(){  
+
+				setTimeout( function(){
+							$.post('frontend.php',function(data){
+							 if(data){
+										
+									var html = viewer(data)
+									$('#bubblefeeds').html(html);
+									
+									var klasses = [ 'wobble', 'tada', 'flip', 'flipInY', 'fadeIn', 'fadeInUp', 'fadeInDown', 'fadeInLeft', 'fadeInUpBig', 'fadeInRightBig' ];
+									klasses.sort( randOrd );
+									$('.tweet-container').each(function(i, val) {
+										$(this).addClass(klasses[i]);
+									});
+									
+								}
+								setTimeout(loaddata());
+							},"JSON");
+						}
+					 ,6000);
+	}
+
+		function viewer(data){
+				var html = ''; 
+				html+='<div class="tweet-container animated"><div class="tweet-message">'+data.message+'</div>';
+				html+='<div class="tweet-userbox"> ';
+				html+='<div class="tweet-thumb"><img src="'+data.profileimages+'"></div>';
+					html+='<div class="tweet-username">'+data.fullname+'</div>';
+					html+='<div class="tweet-date">'+data.createddate+'</div>';
+				html+='</div></div>';
+				return html;
+		
+		}
+</script>
+</body>
+</html>
